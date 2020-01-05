@@ -29,26 +29,18 @@ class Song
 	#		}
 end
   
-    def self.new_by_filename(filename)
-      song_name = filename.partition(" - ")[2]
-      song_name2= /[a-zA-Z ]+-/.match(song_name).to_s.gsub(" -", "")
-      song_name2 = Song.new(song_name2)
-      artist_name_formatted = filename.partition(" - ")[0]
-      #binding.pry
-      artist_name=(artist_name_formatted)
-      song_name2.artist= artist_name_formatted
-      song_name2
+   def self.new_by_filename(filename)
+      song_name = filename.partition(" - ")[2] ########################  isolate - SONG NAME AS STRING ------------
+      song_name2= /[a-zA-Z ]+-/.match(song_name).to_s.gsub(" -", "") ##  isolate - SONG NAME AS STRING ------------
+      song_name2 = Song.new(song_name2) ################################ create  - SONG INSTANCE FROM SONG NAME ---
+      artist_name_formatted = filename.partition(" - ")[0]############## isolate - ARTIST NAME FROM STRING --------
+      
+	  song_name2.artist=(Artist.find_or_create_by_name(artist_name_formatted))
+      
+      song_name2 ##RETURN SONG INSTANCE AS PER SPEC##
     end
     
     def artist_name=(artistname) 
-		found = Artist.all.detect{|el| el.name == artistname}
-			 if found ==true
-			   self.artist=found
-					artistname.songs << self
-			 elsif 	found != true
-				 artistname = Artist.new(artistname)
-				 self.artist=(artistname)
-				 artistname.songs << self
-			end
+		self.artist=(Artist.find_or_create_by_name(artistname))
 end
 end
